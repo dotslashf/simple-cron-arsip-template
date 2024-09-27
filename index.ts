@@ -8,6 +8,7 @@ const CRON_SECRET = process.env.CRON_SECRET;
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Run every day at midnight Jakarta time (5pm UTC)
+console.log('Cron scheduler running');
 cron.schedule(
   '0 17 * * *',
   async () => {
