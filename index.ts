@@ -8,6 +8,57 @@ const CRON_SECRET = process.env.CRON_SECRET;
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Run every day at midnight Jakarta time (5pm UTC)
+
+async function fetchTrendingData(timeframe: string) {
+  try {
+    const response = await fetch(
+      `https://api.dexstatus.xyz/api/gecko/trending?timeframe=${timeframe}`
+    );
+    const result = await response.json();
+    console.log(
+      `Successfully fetched trending data for ${timeframe} timeframe:`,
+      result
+    );
+
+    // Here you can add additional logic to store or process the data
+    // For example, sending it to your API endpoint:
+    await fetch(`${API_URL}/api/your-endpoint`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        timeframe,
+        data: result,
+        secret: CRON_SECRET,
+      }),
+    });
+  } catch (error) {
+    console.error(
+      `Error fetching trending data for ${timeframe} timeframe:`,
+      error
+    );
+  }
+}
+
+// Run every hour for 1h timeframe
+cron.schedule('0 * * * *', () => fetchTrendingData('1h'), {
+  scheduled: true,
+  timezone: 'UTC',
+});
+
+// Run every hour for 6h timeframe
+cron.schedule('0 * * * *', () => fetchTrendingData('6h'), {
+  scheduled: true,
+  timezone: 'UTC',
+});
+
+// Run every hour for 24h timeframe
+cron.schedule('0 * * * *', () => fetchTrendingData('24h'), {
+  scheduled: true,
+  timezone: 'UTC',
+});
+
 console.log('Cron scheduler running');
 cron.schedule(
   '0 17 * * *',
