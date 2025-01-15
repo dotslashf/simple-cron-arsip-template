@@ -19,20 +19,6 @@ async function fetchTrendingData(timeframe: string) {
       `Successfully fetched trending data for ${timeframe} timeframe:`,
       result
     );
-
-    // Here you can add additional logic to store or process the data
-    // For example, sending it to your API endpoint:
-    await fetch(`${API_URL}/api/your-endpoint`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        timeframe,
-        data: result,
-        secret: CRON_SECRET,
-      }),
-    });
   } catch (error) {
     console.error(
       `Error fetching trending data for ${timeframe} timeframe:`,
